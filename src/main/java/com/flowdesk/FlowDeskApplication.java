@@ -5,3 +5,4 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class FlowDeskApplication {
     public static void main(String[] args) { SpringApplication.run(FlowDeskApplication.class, args); }
 }
+
