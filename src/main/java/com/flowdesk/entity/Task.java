@@ -5,51 +5,54 @@ import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity 
-@Table(name="tasks") 
-@Data 
-@NoArgsConstructor 
-@AllArgsConstructor 
+@Entity
+@Table(name = "tasks")
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Task {
-    @Id 
-    @GeneratedValue(strategy=GenerationType.IDENTITY) 
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable=false) 
+    @Column(nullable = false)
     private String title;
 
-    @Column(length=2000) 
+    @Column(length = 2000)
     private String description;
 
-    @Column(nullable=false) 
-    @Builder.Default 
-    private String status = "INCOMPLETE"; // INCOMPLETE, IN_PROGRESS, QA_TESTING, COMPLETED
+    @Column(nullable = false)
+    @Builder.Default
+    private String status = "INCOMPLETE";
 
-    @Column(nullable=false) 
-    @Builder.Default 
-    private String priority = "MEDIUM"; // LOW, MEDIUM, HIGH
-
-    private Integer storyPoints;
-    private Long sprintId; // null = in Product Backlog
+    @Column(nullable = false)
+    @Builder.Default
+    private String priority = "MEDIUM";
 
     private LocalDate dueDate;
 
-    @ManyToOne(fetch=FetchType.EAGER) 
-    @JoinColumn(name="assigned_to_id", nullable=false) 
+    @Builder.Default
+    private Integer storyPoints = 3;
+
+    private Long sprintId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assigned_to_id", nullable = false)
     private User assignedTo;
 
-    @ManyToOne(fetch=FetchType.EAGER) 
-    @JoinColumn(name="assigned_by_id", nullable=false) 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assigned_by_id", nullable = false)
     private User assignedBy;
 
-    @Builder.Default 
-    private int rating = 0;
-    private String ratingComment;
+    @Builder.Default
+    private Integer rating = 0;
 
-    @Column(updatable=false) 
-    @Builder.Default 
-    private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime completedAt;
+    private String ratingComment;
     private LocalDateTime ratedAt;
+    private LocalDateTime completedAt;
+
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
 }
