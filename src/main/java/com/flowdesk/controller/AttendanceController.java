@@ -96,4 +96,31 @@ public class AttendanceController {
 
         return response;
     }
+
+    // GET /api/attendance/history?days=30
+    // Raw per-day records for every user across the trailing window.
+    // The frontend derives streaks, points and the leaderboard from this;
+    // kept intentionally dumb here so game rules can change without a
+    // backend redeploy.
+    @GetMapping("/history")
+    public List<Map<String, Object>> getHistory(
+            @RequestParam(defaultValue = "30") int days) {
+
+        int window = Math.max(1, Math.min(days, 180));
+        LocalDate end = LocalDate.now();
+        LocalDate start = end.minusDays(window - 1L);
+
+        List<Attendance> records = attendanceRepository.findByDateBetween(start, end);
+
+        List<Map<String, Object>> response = new ArrayList<>();
+        for (Attendance record : records) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("userId", record.getUserId());
+            data.put("date", record.getDate());
+            data.put("status", record.getStatus());
+            data.put("timestamp", record.getTimestamp());
+            response.add(data);
+        }
+        return response;
+    }
 }
